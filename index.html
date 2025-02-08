@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      transition: background 0.5s, filter 0.5s;
+      overflow: hidden; /* Prevent scrolling */
+    }
+    h1 {
+      color: #ff0a54;
+      font-size: 2.5rem;
+      text-align: center;
+      z-index: 1; /* Ensure text is above the background */
+    }
+    .buttons {
+      display: flex;
+      gap: 20px;
+      z-index: 1; /* Ensure buttons are above the background */
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s, background 0.3s;
+    }
+    #yesBtn {
+      background: #ff0a54;
+      color: white;
+    }
+    #noBtn {
+      background: #333;
+      color: white;
+    }
+    .love {
+      position: absolute;
+      font-size: 30px;
+      animation: pop 1.5s ease-in-out infinite; /* Popping animation */
+      z-index: 0; /* Ensure emojis are behind text and buttons initially */
+    }
+    @keyframes pop {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+      }
+    }
+    .center-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 200px;
+      height: 200px;
+      transition: transform 1s ease-in-out, filter 1s ease-in-out;
+      z-index: 2; /* Ensure image is above everything */
+    }
+    .center-image.visible {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .black-and-white {
+      filter: grayscale(100%);
+      background: #000; /* Black background */
+    }
+    .hide {
+      display: none; /* Hide text and buttons */
+    }
+  </style>
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <h1>Hey Aapsu, will you be my Valentine?</h1>
+  <div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <!-- Smile Image -->
+  <img id="smileImage" src="smile.png" alt="Smiling Face" class="center-image">
+
+  <!-- Sad Image -->
+  <img id="sadImage" src="sad.png" alt="Sad Face" class="center-image">
+
+  <!-- Background Music -->
+  <audio id="music" src="perfect.mp3"></audio>
+
+  <script>
+    const body = document.body;
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const h1 = document.querySelector('h1');
+    const buttons = document.querySelector('.buttons');
+    const smileImage = document.getElementById('smileImage');
+    const sadImage = document.getElementById('sadImage');
+    const music = document.getElementById('music');
+    let loveInterval;
+
+    // Yes Button Click
+    yesBtn.addEventListener('click', () => {
+      // Hide text and buttons
+      h1.classList.add('hide');
+      buttons.classList.add('hide');
+
+      // Show smile image with smooth animation
+      smileImage.classList.add('visible');
+
+      // Change background to pink
+      body.style.background = '#ffccd5';
+
+      // Start popping love emojis
+      loveInterval = setInterval(() => {
+        const love = document.createElement('div');
+        love.classList.add('love');
+        love.innerHTML = '❤️';
+        love.style.left = Math.random() * 100 + 'vw';
+        love.style.top = Math.random() * 100 + 'vh';
+        body.appendChild(love);
+
+        // Remove emojis after animation ends
+        setTimeout(() => love.remove(), 1500);
+      }, 300); // Emojis pop every 300ms
+
+      // Blast confetti
+      confetti({
+        particleCount: 100, // Number of confetti particles
+        spread: 70, // Spread of the confetti
+        origin: { y: 0.6 }, // Start from the bottom
+      });
+
+      // Keep blasting confetti every 500ms
+      const confettiInterval = setInterval(() => {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.6 },
+        });
+      }, 500);
+
+      // Stop confetti after 5 seconds
+      setTimeout(() => clearInterval(confettiInterval), 5000);
+
+      // Play background music
+      music.play();
+    });
+
+    // No Button Click
+    noBtn.addEventListener('click', () => {
+      // Hide text and buttons
+      h1.classList.add('hide');
+      buttons.classList.add('hide');
+
+      // Show sad image with smooth animation
+      sadImage.classList.add('visible');
+
+      // Turn the website black and white
+      body.classList.add('black-and-white');
+
+      // Stop love emojis
+      clearInterval(loveInterval);
+      document.querySelectorAll('.love').forEach(love => love.remove());
+    });
+  </script>
+</body>
+</html>
